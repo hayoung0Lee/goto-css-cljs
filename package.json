@@ -7,6 +7,10 @@
     "vscode": "^1.58.0"
   },
   "publisher": "Hayoung",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hayoung0Lee/goto-css-cljs.git"
+  },
   "categories": [
     "Other"
   ],
