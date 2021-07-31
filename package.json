@@ -15,7 +15,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:goto-css-cljs.helloWorld"
+    "onLanguage:clojure"
   ],
   "main": "./dist/extension.js",
   "contributes": {
