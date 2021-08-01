@@ -88,7 +88,6 @@ function getClickInfoByKeyword(
     keyword.obj
   );
 
-  console.log("import module", currentDir, importModule, document.getText);
   if (!importModule) {
     return null;
   }
@@ -138,8 +137,6 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
     const currentWord = document.getText(
       document.getWordRangeAtPosition(position)
     );
-
-    console.log("current", currentDir, currentLine, currentWord);
 
     // click한거 및 css file 불러온거 맞는지
     const clickInfo = getClickInfoByKeyword(
