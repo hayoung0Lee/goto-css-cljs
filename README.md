@@ -2,7 +2,7 @@
 
 ## custom `Jump to definition feature`
 
-At my work use css-modules. However, it doesn't work well with [css modules extension](https://github.com/clinyong/vscode-css-modules), because the project is using clojure. So I had to open CSS files whenever I had to fix something, which is somewhat irritating. So I made a vs code extension to customize the `Jump to definition feature`.
+The project I am working on at my work is using css-modules. However, it doesn't work well with [css modules extension](https://github.com/clinyong/vscode-css-modules), because the project is using clojure. So I had to open CSS files whenever I had to fix something, which is somewhat irritating. So I made a Vscode extension to customize the `Jump to definition feature`.
 
 ## How it works
 
