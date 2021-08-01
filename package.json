@@ -18,14 +18,7 @@
     "onLanguage:clojure"
   ],
   "main": "./dist/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "goto-css-cljs.helloWorld",
-        "title": "Hello World"
-      }
-    ]
-  },
+  "contributes": {},
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "webpack",
