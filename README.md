@@ -12,19 +12,15 @@ To customize language related features in vscode, check this [document](https://
 
 2. When someone tries to `jump to definition` by hovering the mouse on some keywords, it provides the location of the definition based on the action I defined in `CSSModuleDefinitionProvider`.
 
+3. When there are multiple definitions of the selected keyword, it shows definitions of the classname in the target CSS file.
+
+## Preview
+
+<img src="./assets/preview.gif">
+
 ## Ref
 
-- code lens 예제: https://github.com/Microsoft/vscode-extension-samples/tree/main/codelens-sample
+- [vscode-css-modules](https://github.com/clinyong/vscode-css-modules)
+- [calva](https://marketplace.visualstudio.com/items?itemName=betterthantomorrow.calva)
 
-- https://code.visualstudio.com/api/language-extensions/overview#programmatic-language-features
-
-```
-Hover information (vscode.languages.registerHoverProvider)
-Auto completion (vscode.languages.registerCompletionItemProvider)
-Jump to definition (vscode.languages.registerDefinitionProvider)
-```
-
-- 원래 되는거 참고
-  https://github.com/clinyong/vscode-css-modules
-
-- calva: https://marketplace.visualstudio.com/items?itemName=betterthantomorrow.calva
+I got a lot of inspiration from those two extentions to make this extension.
