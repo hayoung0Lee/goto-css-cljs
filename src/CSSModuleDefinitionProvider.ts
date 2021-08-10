@@ -8,7 +8,6 @@ import {
 } from "vscode";
 import * as path from "path";
 import * as fs from "fs";
-import { strict } from "assert";
 
 interface ClickInfo {
   importModule: string;
@@ -72,8 +71,6 @@ function findImportModule(
 function getClickInfoByKeyword(
   currentDir: string,
   document: TextDocument,
-  currentLine: string,
-  position: Position,
   currentWord: string
 ): ClickInfo | null {
   const keyword = getKeyword(currentWord);
@@ -100,13 +97,36 @@ function getClickInfoByKeyword(
   };
 }
 
-function getPositionInCssFile(
-  document: TextDocument,
-  currentLine: string,
-  position: Position,
-  currentWord: string
-): Position | null {
-  return new Position(0, 0);
+function getPositionInCssFile(clickInfo: ClickInfo): Position[] | null {
+  // console.log("clickInfo", clickInfo);
+  const content = fs.readFileSync(clickInfo.importModule, { encoding: "utf8" });
+  const lines = content.split("\n");
+  const searchKeyword = `.${clickInfo.targetClass}`;
+
+  const found: Position[] = [];
+  for (const [lineNum, lineContent] of lines.entries()) {
+    const trimmed = lineContent.trim();
+    // 빈 line이거나, .class명이 아닌경우 걸러낸다
+    if (lineContent.length <= 0 || trimmed[0] !== ".") {
+      continue;
+    }
+
+    const cssClassName = trimmed.split(" ")[0].trim();
+    if (cssClassName === searchKeyword) {
+      const getWhiteSpace = lineContent.match(/^\s*/);
+      const countStartingWhiteSpace =
+        getWhiteSpace === null ? 0 : getWhiteSpace[0].length;
+
+      found.push(new Position(lineNum, countStartingWhiteSpace));
+    }
+  }
+
+  // 아무것도 못찾았을 때
+  if (!found) {
+    return [new Position(0, 0)];
+  }
+
+  return found;
 }
 
 function getCurrentSrcPath(currentDir: string): string | null {
@@ -126,37 +146,24 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
     document: TextDocument,
     position: Position,
     token: CancellationToken
-  ): Promise<Location | null> {
-    // Location(uri: Uri, rangeOrPosition: Range | Position)
+  ): Promise<Location[] | null> {
     const currentDir = getCurrentSrcPath(path.dirname(document.uri.fsPath));
     if (!currentDir) {
       return null;
     }
 
-    const currentLine = document.getText(document.lineAt(position).range);
     const currentWord = document.getText(
       document.getWordRangeAtPosition(position)
     );
 
     // click한거 및 css file 불러온거 맞는지
-    const clickInfo = getClickInfoByKeyword(
-      currentDir,
-      document,
-      currentLine,
-      position,
-      currentWord
-    );
+    const clickInfo = getClickInfoByKeyword(currentDir, document, currentWord);
     if (!clickInfo) {
       return Promise.resolve(null);
     }
 
     // css 파일 열었을때의 위치
-    const targetPosition: Position | null = getPositionInCssFile(
-      document,
-      currentLine,
-      position,
-      currentWord
-    );
+    const targetPosition: Position[] | null = getPositionInCssFile(clickInfo);
 
     if (!targetPosition) {
       return Promise.resolve(null);
@@ -164,7 +171,9 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
 
     // css 파일의 경로, 파일 경로내에서의 위치
     return Promise.resolve(
-      new Location(Uri.file(clickInfo.importModule), targetPosition)
+      targetPosition.map(
+        (tp) => new Location(Uri.file(clickInfo.importModule), tp)
+      )
     );
   }
 }
